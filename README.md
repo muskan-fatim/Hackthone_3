@@ -1,1 +1,1 @@
-## Hacthone of UI AND UX 
+## Hacthone 3
