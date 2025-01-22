@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import { useSearch } from "../context/SearchContext";
 import { useNotification } from "../context/NotificationContext";
@@ -77,6 +77,7 @@ const Navbar = () => {
             />
           </div>
           <div className="w-10 h-10 overflow-hidden border border-gray-300 rounded-full">
+          <Suspense fallback={<div className="text-sm text-gray-500">Loading...</div>}>
              <UserButton
                                   appearance={{
                                       elements: {
@@ -85,6 +86,8 @@ const Navbar = () => {
                                       },
                                   }}
                               />
+                                    </Suspense>
+
           </div>
         </div>
 
@@ -143,8 +146,8 @@ const Navbar = () => {
               )}
             </button>
            
-            {/* Profile Image */}
-            <UserButton
+            <Suspense fallback={<div className="text-sm text-gray-500">Loading...</div>}>
+             <UserButton
                                   appearance={{
                                       elements: {
                                           userButtonTrigger:
@@ -152,7 +155,8 @@ const Navbar = () => {
                                       },
                                   }}
                               />
-          </div>
+                                    </Suspense>
+                                    </div>
         </div>
       </nav>
     </>
