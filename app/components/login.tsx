@@ -1,7 +1,19 @@
 'use client'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { useSearchParams , useRouter} from 'next/navigation';
+import { useEffect } from 'react';
 
 const Login = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get('redirect'); // Get the redirect query parameter
+
+    useEffect(() => {
+      if (redirect) {
+        // Redirect the user after login is successful
+        router.push(redirect as string);
+      }
+    }, [redirect]);
     return (
         <div>
   

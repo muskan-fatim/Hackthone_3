@@ -67,11 +67,11 @@ export default function Hero() {
           </p>
           <button className="bg-blue-600 p-2 text-white mt-5">Rent a Car</button>
           <Image
-            src="https://car-rental-website-five.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcar.11698147.jpg&w=640&q=75"
+            src="/car.png"
             alt="Car Image"
             className="mt-4 w-auto rounded-lg bg-transparent"
-            width={500}
-            height={500}
+            width={800}
+            height={800}
           />
         </div>
 
@@ -85,7 +85,7 @@ export default function Hero() {
           </p>
           <button className="bg-blue-400 p-2 text-white mt-5">Rent a Car</button>
           <Image
-            src="https://car-rental-website-five.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcar(1).cab606a9.jpg&w=640&q=75"
+            src="/car_1.png"
             alt="Car Image"
             className="mt-4 w-full rounded-lg bg-transparent"
             width={500}

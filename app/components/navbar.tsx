@@ -41,13 +41,24 @@ const Navbar = () => {
         }`}
       >
         <div className="flex flex-col items-center py-6">
-          <Image
-            src="/sidebar.png"
-            alt="Sidebar Logo"
-            width={40}
-            height={40}
-            className="object-cover mb-4"
-          />
+        <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="40"
+  height="40"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="2"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  className="mb-4"
+>
+  <rect x="3" y="3" width="6" height="18" rx="1" ry="1"></rect>
+  <line x1="14" y1="5" x2="21" y2="5"></line>
+  <line x1="14" y1="12" x2="21" y2="12"></line>
+  <line x1="14" y1="19" x2="21" y2="19"></line>
+</svg>
+
           <button
             className="text-lg font-semibold py-2 px-4 text-blue-500"
             onClick={() => router.push('/notification')}

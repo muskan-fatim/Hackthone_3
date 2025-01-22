@@ -19,8 +19,7 @@ export default function RootLayout({
       <body>
         <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <NotificationProvider>
-            {children}
-          </NotificationProvider>
+          <main>{children}</main>          </NotificationProvider>
           <Footer />
         </ClerkProvider>
       </body>
