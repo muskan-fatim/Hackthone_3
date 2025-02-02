@@ -62,73 +62,67 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col items-center py-6 mt-40">
-          {/* Sidebar content */}
+        <div className="flex flex-col items-center py-6">
+        <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="40"
+  height="40"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="2"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  className="mb-4"
+>
+  <rect x="3" y="3" width="6" height="18" rx="1" ry="1"></rect>
+  <line x1="14" y1="5" x2="21" y2="5"></line>
+  <line x1="14" y1="12" x2="21" y2="12"></line>
+  <line x1="14" y1="19" x2="21" y2="19"></line>
+</svg>
+
           <button
-        className="flex items-center gap-2 text-lg font-semibold py-2 px-4 text-blue-500"
-        onClick={() => router.push("/")}
-      >
-        <Home className="w-5 h-5" />
-        Home
-      </button>
-      <button
-        className="flex items-center gap-2 text-lg font-semibold py-2 px-4 text-blue-500"
-        onClick={() => router.push("/favorite")}
-      >
-        <Heart className="w-5 h-5" />
-        Favorite
-      </button>
-      
-      <button
-        className="flex items-center gap-2 text-lg font-semibold py-2 px-4 text-blue-500"
-        onClick={() => router.push("/notification")}
-      >
-        <Bell className="w-5 h-5" />
-        Notifications
-      </button>
-
-      <button
-        className="flex items-center gap-2 text-lg font-semibold py-2 px-4 text-blue-500"
-        onClick={() => router.push("/car-love")}
-      >
-        <Car className="w-5 h-5" />
-        Demanding Car
-      </button>
-
-      
-    
-         
+            className="text-lg font-semibold py-2 px-4 text-blue-500"
+            onClick={() => router.push('/notification')}
+          >
+            Notifications
+          </button>
+          <button
+            className="text-lg font-semibold py-2 px-4 text-blue-500"
+            onClick={() => router.push('/car-love')}
+          >
+            Car Rentals
+          </button>
+          {/* Add more items here as needed */}
         </div>
       </div>
 
-     {/* Navbar */}
-<nav className="fixed top-0 left-0 w-full z-50 flex flex-wrap  items-center justify-between px-4 sm:px-8 py-4 bg-white shadow">
-  <div className="md:hidden space-x-56">
-    <FiMenu className="text-3xl text-blue-500 cursor-pointer" onClick={toggleSidebar} />
-  </div>
+      {/* Navbar */}
+      <nav className="flex flex-wrap items-center justify-between px-4 sm:px-8 py-4 bg-white shadow">
+        <div className="md:hidden flex space-x-56">
+          <div className="w-10 h-10 overflow-hidden cursor-pointer" onClick={toggleSidebar}>
+            <Image
+              src="/sidebar.png"
+              alt="Sidebar Icon"
+              width={40}
+              height={40}
+              className="object-cover"
+            />
+          </div>
+          <div className="w-10 h-10 overflow-hidden border border-gray-300 rounded-full">
+          <Suspense fallback={<div className="text-sm text-gray-500">Loading...</div>}>
+             <UserButton
+                                  appearance={{
+                                      elements: {
+                                          userButtonTrigger:
+                                              "px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition",
+                                      },
+                                  }}
+                              />
+                                    </Suspense>
 
-  <div className="text-2xl font-bold text-blue-500">MORENT</div>
-
-  {/* User Button for all screen sizes */}
-  <div className="sm:hidden">
-    {isSignedIn ? (
-      <Suspense fallback={<div className="text-sm text-gray-500">Loading...</div>}>
-        <UserButton
-          appearance={{
-            elements: {
-              userButtonTrigger:
-                "px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition",
-            },
-          }}
-        />
-      </Suspense>
-    ) : (
-      <FaUser
-        className="text-4xl border p-2 border-gray-300 rounded-full text-gray-600 cursor-pointer"
-        onClick={openModal}
-      />
-    )}
-  </div>
+          </div>
+        </div>
 
         <div className="relative flex items-center w-full mt-4 sm:mt-0 sm:max-w-md">
           <input
