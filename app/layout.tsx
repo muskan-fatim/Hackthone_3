@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "./components/footer";
 import { ClerkProvider } from "@clerk/nextjs";
-import { NotificationProvider } from "./context/NotificationContext";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import ClientProviders from "./components/clientprovider";
+
 export const metadata: Metadata = {
-  title: "Hackthone",
-  description: "hackthone 3",
+  title: "Mornet",
+  description: "Hackathon 3",
+  icons: {
+    icon: "/favicon.ico",  
+  },
 };
 
 export default function RootLayout({
@@ -16,12 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+ 
       <body>
-        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-          <NotificationProvider>
-          <main>{children}</main>          </NotificationProvider>
-          <Footer />
-        </ClerkProvider>
+        <ClerkProvider
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || ""}
+        >
+
+<ClientProviders>{children}</ClientProviders>
+
+              <Footer />
+       </ClerkProvider>
       </body>
     </html>
   );

@@ -1,18 +1,14 @@
-'use client';
-import React from 'react';
-import { SearchProvider } from './context/SearchContext';
 import Hero from './components/hero';
-import Navbar from './components/navbar';
-import { NotificationProvider } from './context/NotificationContext';
+import Head from 'next/head';
 
 const App = () => {
   return (
-    <NotificationProvider> {/* Ensure NotificationProvider wraps the components that need it */}
-      <SearchProvider>
-        <Navbar />
-        <Hero />
-      </SearchProvider>
-    </NotificationProvider>
+    <>
+        <Head>
+        <link rel="manifest" href="/site.webmanifest" />
+      </Head>
+      <Hero />
+      </>
   );
 };
 

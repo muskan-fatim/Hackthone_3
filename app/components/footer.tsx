@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <div className="bg-white h-fit mt-5">
+    <div className="bg-white h-fit">
       <main className="py-12 px-6">
         <div className="container mx-auto">
           {/* Logo */}

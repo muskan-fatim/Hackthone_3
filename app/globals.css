@@ -5,3 +5,7 @@
 .layout{
     max-width: 1000px;
 }
+.image{
+    height: auto;
+    width: auto;
+}

@@ -1,17 +1,17 @@
 'use client';
+
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HeartIcon, UserGroupIcon, BeakerIcon, CogIcon } from '@heroicons/react/outline';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { client } from '../../sanity/lib/client';
 import Image from 'next/image';
 import { useSearch } from '../context/SearchContext';
 import Fuse from 'fuse.js';
-import {  NotificationProvider, useNotification } from '../context/NotificationContext';
-import router, { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import Navbar from './navbar';
+import { SearchProvider } from'../context/SearchContext';
 
-// Define CarType interface
 interface CarType {
   _id: string;
   transmission: string;
@@ -24,7 +24,6 @@ interface CarType {
   tags: string[];
 }
 
-// Fetch data from Sanity
 const fetchPopularCars = async () => {
   return client.fetch(`*[_type=="car" && "popular" in tags]{
     transmission,
@@ -54,29 +53,40 @@ const fetchRecommendedCars = async () => {
 };
 
 export default function Hero() {
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const handleSearch = () => {
+    if (cardsRef.current) {
+      cardsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex flex-col lg:flex-row items-stretch justify-between p-10 space-y-6 lg:space-y-0 lg:space-x-6">
+    <div className="min-h-screen bg-gray-100 mt-12">
+      <SearchProvider>
+            <Navbar onSearch={handleSearch} />
+      
+      <div className="pt-20
+       flex flex-col lg:flex-row items-stretch justify-between p-10 space-y-6 lg:space-y-0 lg:space-x-6">
         <div className="bg-blue-400 p-6 flex-1 rounded-lg">
-          <h2 className="text-3xl text-white">
+          <h2 className="text-3xl text-white font-bold">
             The Best Platform<br />for Car Rental
           </h2>
           <p className="text-white mt-2">
             Ease of doing a car rental safely and reliably.<br />
             Of course, at a low price.
           </p>
-          <button className="bg-blue-600 p-2 text-white mt-5">Rent a Car</button>
+          <button className="bg-blue-600 p-2 mt-5 text-white mb-7">Rent a Car</button>
           <Image
-            src="/car.png"
+            src="https://s3-alpha-sig.figma.com/img/2385/cc01/da9bb791587b8022c475d39822c50c17?Expires=1739145600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=BSh~r5TMqqnrqTJxFsl4yYJTnY~IEs4RRyB7ucFtzoDvbvuQSF-LEbiUaxtotea-U0KeqhAOSx82Z2Je2uX~-zqKVTACuyzX165wIAmp~odjh8iTsDVP3OCpTT0HBCi73pFwjDVk8-s5Xr11Bfs5hst1rjBnjQirKTMkUHkkzhwR4oZSb82QPbREJPnztR-uF9XuPzk2EcmgJiBbIbtzgrD5mTd31sl3MAhjmcS3Ha7HuLHJTjt5BWM3WhVDYtPBfJTIyzOwC9Pr9kzKWu9ZdLA~uu6zFuyD-HCVSnePGWl5X0EKeIRfaIPN-oL9WM1lvKnTkzQoZA6ujIELaSfBRA__"
             alt="Car Image"
             className="mt-4 w-auto rounded-lg bg-transparent"
-            width={800}
-            height={800}
+            width={500}
+            height={500}
           />
         </div>
 
         <div className="bg-blue-600 p-6 flex-1 rounded-lg">
-          <h2 className="text-3xl text-white">
+          <h2 className="text-3xl text-white font-bold">
             Easy Way to Rent a<br />Car at a Low Price
           </h2>
           <p className="text-white mt-2">
@@ -85,34 +95,35 @@ export default function Hero() {
           </p>
           <button className="bg-blue-400 p-2 text-white mt-5">Rent a Car</button>
           <Image
-            src="/car_1.png"
+            src="https://s3-alpha-sig.figma.com/img/702f/356e/48fe531e6fd2626c5d1041dbfcde3341?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=JzbWG66I-rm67MLnDrN6y5jb9aQAAxDz2zCOIm-EsSRMLwmggUbQcqsNdbDUJmHwUu3NhC6FQoYR4gVD2g7mCs6EeBGTtj5HRFQY3h~0Q~Yic4iFi-bwnbkSmwei3Vu7iNtSwyzhxCgXJgSHjxJdEMhbiwCdYIdnSjkSj5~KpyTna321FFXdVO2NrglCw40ZbjyMFS6O-WlLCSveQZFlcdUPK0T-QxUMMSWSCOb1wXHuJyyYYdUdc0GV~fiBHqGCeKvZkKFE7OBr~17ApXtUQt2WtTMeFMQqogSylxuEWx-JDL0tWykG4-e91qJBFxLIqL4037J34iEQQ1T3n0BTJg__"
             alt="Car Image"
-            className="mt-4 w-full rounded-lg bg-transparent"
+            className="mt-4 w-full rounded-lg"
             width={500}
             height={500}
           />
         </div>
       </div>
-           <Cards />
-    
-
+      <div ref={cardsRef} className="mt-16 px-4 sm:px-8 lg:px-16">
+                <Cards />
+              </div>
+              </SearchProvider>
     </div>
   );
 }
 
 
-export function Cards() {
-  const router = useRouter(); // This should now work since it's in a client component
 
-  const [login] = useState<React.ReactElement | null>(null)
-  const { searchQuery } = useSearch();
-  const [popularCars, setPopularCars] = useState([]);
-  const [recommendedCars, setRecommendedCars] = useState([]);
+export function Cards() {
+  const router = useRouter();
+  const { searchQuery } = useSearch(); // Custom hook to get search query
+  const [popularCars, setPopularCars] = useState<CarType[]>([]);
+  const [recommendedCars, setRecommendedCars] = useState<CarType[]>([]);
   const [likedStates, setLikedStates] = useState<{ [key: string]: boolean }>({});
-  const [results, setResults] = useState([]);
-  const { addNotification } = useNotification();
-// setlogin("/login") - removed as it is not necessary
-  // Fetch data on component mount
+  const [results, setResults] = useState<CarType[]>([]);
+  const [favoriteCars, setFavoriteCars] = useState<CarType[]>([]);
+  const [showAll, setShowAll] = useState(false);
+  const [login, setLogin] = useState<boolean>(false); // Mock login state, update this based on your actual authentication logic
+
   useEffect(() => {
     async function fetchData() {
       const popCars = await fetchPopularCars();
@@ -120,7 +131,6 @@ export function Cards() {
       setPopularCars(popCars);
       setRecommendedCars(recCars);
 
-      // Initialize liked states
       const initialLikes: { [key: string]: boolean } = {};
       [...popCars, ...recCars].forEach((car) => {
         initialLikes[car._id] = false;
@@ -130,56 +140,75 @@ export function Cards() {
     fetchData();
   }, []);
 
-  // Update results when searchQuery changes
   useEffect(() => {
     if (searchQuery) {
       const fuseOptions = { keys: ['name'], threshold: 0.3 };
       const popularResults = new Fuse(popularCars, fuseOptions).search(searchQuery).map((res) => res.item);
       const recommendedResults = new Fuse(recommendedCars, fuseOptions).search(searchQuery).map((res) => res.item);
-  
-      // Combine results if needed or handle separately
       setResults([...popularResults, ...recommendedResults]);
     } else {
-      // No search query, reset to default cars
       setResults([...popularCars, ...recommendedCars]);
     }
   }, [searchQuery, popularCars, recommendedCars]);
-  
-  const toggleLike = (carId: string, carName: string) => {
+
+  const toggleFavorite = (car: CarType) => {
     setLikedStates((prev) => {
-      const isLiked = !prev[carId];
+      const isLiked = !prev[car._id];
+
       if (isLiked) {
-        setTimeout(() => {
-          toast.success('Car added to favorites!', { position: 'top-right' });
-          addNotification(`You added ${carName} to favorites.`);
-        }, 0);
+        toast.success('Car added to favorites!', { position: 'top-left' });
+
+        setFavoriteCars((prev) => {
+          const updatedFavorites = [...prev, car];
+          localStorage.setItem('favoriteCars', JSON.stringify(updatedFavorites));
+          return updatedFavorites;
+        });
+
+        const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        notifications.push({ message: `You added ${car.name} to your favorites.` });
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+
       } else {
-        setTimeout(() => {
-          toast.info('Car removed from favorites.', { position: 'top-right' });
-        }, 0);
+        toast.info('Car removed from favorites.', { position: 'top-right' });
+
+        const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        notifications.push({ message: `You removed ${car.name} from your favorites.` });
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+
+        setFavoriteCars((prev) => {
+          const updatedFavorites = prev.filter((favCar) => favCar._id !== car._id);
+          localStorage.setItem('favoriteCars', JSON.stringify(updatedFavorites));
+          return updatedFavorites;
+        });
       }
-    
+
       return {
         ...prev,
-        [carId]: isLiked,
+        [car._id]: isLiked,
       };
     });
   };
 
-  const renderCars = (cars: CarType[]) =>
-    
-    cars.map((car) => (
+  const handleClick = (carId: string) => {
+    if (!login) {
+      router.push(`/login?redirect=/components/${carId}`);
+    } else {
+      router.push(`/components/${carId}`);
+    }
+  };
+
+  const renderCars = (cars: CarType[]) => {
+    const carsToRender = showAll ? cars : cars.slice(0, 6);
+    return carsToRender.map((car) => (
       <div key={car._id} className="bg-white rounded-lg shadow-lg p-3">
         <div className="flex justify-between items-start">
           <h3 className="text-lg font-bold mt-4">{car.name}</h3>
           <HeartIcon
-            onClick={() => toggleLike(car._id,car.name)}
-            className={`h-5 w-5 cursor-pointer ${
-              likedStates[car._id] ? 'text-red-500 fill-red-500' : 'text-gray-400'
-            }`}
+            onClick={() => toggleFavorite(car)}
+            className={`h-6 w-6 cursor-pointer ${likedStates[car._id] ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}
           />
         </div>
-        <p className="text-gray-400">{car.type}</p>
+        <p className="text-gray-400 image">{car.type}</p>
         <Image
           src={car.image}
           alt={car.name}
@@ -205,18 +234,14 @@ export function Cards() {
             <span className="text-sm">{car.seatingCapacity}</span>
           </div>
         </div>
-        <button  className="items-center w-40 p-2 m-4 ml-2 bg-blue-600 text-white font-semibold rounded-lg text-center hover:bg-blue-700 transition duration-300" onClick={() => handleClick(car._id)} >Rent now</button>
+        <button
+          className="items-center w-40 p-2 m-4 ml-2 bg-blue-600 text-white font-semibold rounded-lg text-center hover:bg-blue-700 transition duration-300"
+          onClick={() => handleClick(car._id)}
+        >
+          Rent now
+        </button>
       </div>
     ));
-
-  const handleClick = (carId: string) => {
-    if (!login) {
-      // If the user is not logged in, redirect to the login page with the redirect URL as a query parameter
-      router.push(`/login?redirect=/components/${carId}`);
-    } else {
-      // If the user is logged in, proceed to the component page directly
-      router.push(`/components/${carId}`);
-    }
   };
 
   return (
@@ -224,14 +249,20 @@ export function Cards() {
       <ToastContainer />
       <h2 className="text-2xl font-bold mb-6">Popular Cars</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {results.length > 0 ? renderCars(results) : <p>No cars found.</p>}
+        {renderCars(results)}
       </div>
-
       <h2 className="text-2xl font-bold mt-12 mb-6">Recommended Cars</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {results.length > 0 ? renderCars(results) : <p>No cars found.</p>}
+        {renderCars(results)}
+      </div>
+      <div className="flex justify-center mt-8">
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg mb-5 hover:bg-blue-700"
+          onClick={() => setShowAll((prev) => !prev)}
+        >
+          {showAll ? 'Show Less' : 'Show More'}
+        </button>
       </div>
     </section>
   );
 }
-
