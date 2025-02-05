@@ -42,6 +42,39 @@ export default function BillingPage() {
   const [paymentMethod, setPaymentMethod] = useState('');
 
   const handleCheckout = async () => {
+    const cleanedPrice = car.pricePerDay
+    ? parseFloat(car.pricePerDay.replace(/[^0-9.]/g, ''))
+    : 0;
+    const generateOrderId = () => {
+      return `order-${Date.now()}`;
+    };
+    const orderData = {
+      _type: 'order',
+      orderId: generateOrderId(),
+      customerName: watch('name'),  // Changed from 'name' to 'customerName'
+      phone: watch('phone'),
+      address: watch('address'),
+      city: watch('city'),
+      pickupLocation: watch('pickupLocation'),
+      dropoffLocation: watch('dropoffLocation'),
+      pickupTime: watch('pickupTime'),
+      dropoffTime: watch('dropoffTime'),
+      paymentMethod,
+      items: [{ _type: 'reference', _ref: car._id }], // Reference to 'car' schema
+      totalPrice:  cleanedPrice , // Ensure this exists
+      status: 'pending', // Default status
+      createdAt: new Date().toISOString(), // Ensure proper datetime format
+    };
+    
+    try{
+      const response = await client.create(orderData);
+      console.log('Order Created Successfully:', response);
+
+    }
+    catch(error){
+      console.error('Failed to create order:', error);
+    }
+  
     if (paymentMethod === 'credit') {
       // Handle Stripe checkout
       const stripe = await stripePromise;
@@ -49,9 +82,7 @@ export default function BillingPage() {
         console.error('Stripe failed to load.');
         return;
       }
-      const cleanedPrice = car.pricePerDay
-        ? parseFloat(car.pricePerDay.replace(/[^0-9.]/g, ''))
-        : 0;
+     
       const requestBody = {
         name: car.name,
         price: cleanedPrice,
@@ -64,7 +95,7 @@ export default function BillingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
       });
-
+     
       const responseText = await response.text();
       let session;
       try {
@@ -84,7 +115,7 @@ export default function BillingPage() {
         console.error('Stripe redirect error:', error);
       }
     } else if (paymentMethod === 'cod') {
-      // Redirect to success page for COD
+      
       window.location.href = '/success';
     } 
     else {
@@ -93,7 +124,6 @@ export default function BillingPage() {
     
   };
 
- 
 
   const [car, setCar] = useState<any>(null);
 
