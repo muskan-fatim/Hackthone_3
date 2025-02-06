@@ -37,7 +37,7 @@ export default function FavoriteCars() {
         This ensures the header, main content, and optional footer 
         are laid out properly even on mobile.
       */}
-      <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-400 to-indigo-500 text-white">
+      <div className="min-h-screen flex flex-col bg-gradient-to-t from-blue-500 to-blue-800 text-white">
         {/* Main content area */}
         <main className="flex-grow pt-16 md:pt-20 pb-8 ">
           <div className="container mx-auto px-6 md:px-12 lg:px-20">
