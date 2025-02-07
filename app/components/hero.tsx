@@ -125,31 +125,37 @@ export function Cards() {
   const [login, setLogin] = useState<boolean>(false); // Mock login state, update this based on your actual authentication logic
 
   useEffect(() => {
-    async function fetchData() {
-      const popCars = await fetchPopularCars();
-      const recCars = await fetchRecommendedCars();
-      setPopularCars(popCars);
-      setRecommendedCars(recCars);
+  async function fetchData() {
+    const popCars = await fetchPopularCars();
+    const recCars = await fetchRecommendedCars();
+    setPopularCars(popCars);
+    setRecommendedCars(recCars);
 
-      const initialLikes: { [key: string]: boolean } = {};
-      [...popCars, ...recCars].forEach((car) => {
-        initialLikes[car._id] = false;
-      });
-      setLikedStates(initialLikes);
-    }
-    fetchData();
-  }, []);
+    // Ensure cars show by default if there's no search query
+    setResults([...popCars, ...recCars]);
 
-  useEffect(() => {
-    if (searchQuery) {
-      const fuseOptions = { keys: ['name'], threshold: 0.3 };
-      const popularResults = new Fuse(popularCars, fuseOptions).search(searchQuery).map((res) => res.item);
-      const recommendedResults = new Fuse(recommendedCars, fuseOptions).search(searchQuery).map((res) => res.item);
-      setResults([...popularResults, ...recommendedResults]);
-    } else {
-      setResults([...popularCars, ...recommendedCars]);
-    }
-  }, [searchQuery, popularCars, recommendedCars]);
+    // Initialize liked states
+    const initialLikes: { [key: string]: boolean } = {};
+    [...popCars, ...recCars].forEach((car) => {
+      initialLikes[car._id] = false;
+    });
+    setLikedStates(initialLikes);
+  }
+  fetchData();
+}, []);
+
+useEffect(() => {
+  if (searchQuery) {
+    const fuseOptions = { keys: ['name'], threshold: 0.3 };
+    const popularResults = new Fuse(popularCars, fuseOptions).search(searchQuery).map((res) => res.item);
+    const recommendedResults = new Fuse(recommendedCars, fuseOptions).search(searchQuery).map((res) => res.item);
+    setResults([...popularResults, ...recommendedResults]);
+  } else {
+    // Ensure that the results always have some data
+    setResults([...popularCars, ...recommendedCars]);
+  }
+}, [searchQuery, popularCars, recommendedCars]);
+  
 
   const toggleFavorite = (car: CarType) => {
     setLikedStates((prev) => {
@@ -198,6 +204,9 @@ export function Cards() {
   };
 
   const renderCars = (cars: CarType[]) => {
+    if (!cars.length) {
+    return <p className="text-center text-gray-500">No cars available</p>;
+    }
     const carsToRender = showAll ? cars : cars.slice(0, 6);
     return carsToRender.map((car) => (
       <div key={car._id} className="bg-white rounded-lg shadow-lg p-3">
